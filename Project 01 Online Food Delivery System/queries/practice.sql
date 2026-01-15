@@ -37,3 +37,32 @@ SELECT restaurant_name, COUNT(order_id) AS total_orders
 FROM restaurants JOIN orders
 on restaurants.restaurant_id = orders.restaurant_id
 GROUP BY restaurant_name
+
+SELECT 
+    r.restaurant_name, 
+    SUM(oi.quantity * oi.price_at_order) AS total_revenue
+FROM restaurants r 
+JOIN orders o
+    ON r.restaurant_id = o.restaurant_id
+JOIN order_items oi
+    ON o.order_id = oi.order_id
+GROUP BY restaurant_name
+
+SELECT 
+    c.customer_name,
+    SUM(oi.quantity * oi.price_at_order) AS total_revenue
+FROM customers c
+JOIN orders o 
+    ON c.customer_id = o.customer_id
+JOIN order_items oi 
+    ON o.order_id = oi.order_id
+GROUP BY customer_name
+
+SELECT 
+    mi.item_name,
+    SUM(oi.quantity) AS total_quantity_ordered
+FROM menu_items mi 
+JOIN order_items oi 
+    ON mi.item_id = oi.item_id
+GROUP BY item_name
+ORDER BY total_quantity_ordered DESC
