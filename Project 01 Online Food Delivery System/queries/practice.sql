@@ -66,3 +66,54 @@ JOIN order_items oi
     ON mi.item_id = oi.item_id
 GROUP BY item_name
 ORDER BY total_quantity_ordered DESC
+
+SELECT 
+    c.customer_name
+FROM customers c
+LEFT JOIN orders o
+    ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL
+
+SELECT
+    c.customer_name,
+    SUM(oi.quantity * oi.price_at_order) AS total_revenue
+FROM customers c
+JOIN orders o
+    ON c.customer_id = o.customer_id
+LEFT JOIN order_items oi 
+    ON o.order_id = oi.order_id 
+GROUP BY customer_name
+ORDER BY total_revenue DESC 
+LIMIT 3;
+
+SELECT 
+    r.restaurant_name,
+    SUM(oi.quantity * oi.price_at_order) AS total_revenue
+FROM restaurants r 
+LEFT JOIN orders o
+    ON r.restaurant_id = o.restaurant_id
+LEFT JOIN order_items oi
+    ON o.order_id = oi.order_id
+GROUP BY restaurant_name
+ORDER BY total_revenue DESC
+LIMIT 1;
+
+SELECT 
+    mi.item_name,
+    SUM(oi.quantity) AS total_quantity_ordered
+FROM menu_items mi 
+LEFT JOIN order_items oi 
+    ON mi.item_id = oi.item_id
+GROUP BY item_name
+ORDER BY total_quantity_ordered DESC
+LIMIT 1;
+
+SELECT 
+    c.customer_name,
+    o.order_id
+FROM customers c
+JOIN orders o
+    ON c.customer_id = o.customer_id
+LEFT JOIN payments p
+    ON o.order_id = p.order_id
+WHERE p.order_id IS NULL;
